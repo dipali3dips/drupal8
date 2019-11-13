@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * @file
+ * Contains menu_title_length.module.
+ */
+
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Site\Settings;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\menu_title_length\MenuTitleLengthConstant;
+
+/**
+ * Implements hook_help().
+ */
+function menu_title_length_help($route_name, RouteMatchInterface $route_match) {
+
+  switch ($route_name) {
+    // Main module help for the Menu title length module.
+    case 'help.page.menu_title_length':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Set length for Menu Title') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_entity_base_field_info_alter().
+ */
+function menu_title_length_entity_base_field_info_alter(&$fields, EntityTypeInterface $entity_type) {
+  // Alter the title field to change length.
+  if ($entity_type->id() == 'menu_link_content' && !empty($fields['title'])) {
+    // Get length of settings.
+    $length = Settings::get('menu_title_length');
+    if (empty($length)) {
+      $length = MenuTitleLengthConstant::MENU_TITLE_LENGTH;
+    }
+    $fields['title']->setSetting('max_length', $length);
+  }
+
+}
