@@ -18,13 +18,13 @@ class AddSiteApiKeyController{
   public function content($added_site_api_key, NodeInterface $node){
     // Site API Key configuration value
     $added_site_api_key_saved = \Drupal::config('system.site')->get('siteapikey');
-    // Make sure the supplied node is a page, the configuration key is set and matches the supplied key
+    // Check if the node id given is of page type and the $added_site_api_key is same as site api key on configuration page
     if($node->getType() == 'page' && $added_site_api_key_saved != 'No API Key yet' && $added_site_api_key_saved == $added_site_api_key){
 
-    // Respond with the json representation of the node
+    // return json response with node id supplied as argument
       return new JsonResponse($node->toArray(), 200, ['Content-Type'=> 'application/json']);
     }
     // Respond with access denied
-    return new JsonResponse(array("error" => "access denied"), 401, ['Content-Type'=> 'application/json']);
+    return new JsonResponse(["error" => "access denied"], 401, ['Content-Type'=> 'application/json']);
   }
 }
