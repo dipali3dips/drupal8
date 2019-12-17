@@ -1,0 +1,70 @@
+<?php
+
+/**
+ * @file
+ * Installation hooks for menu title length module.
+ */
+
+use Drupal\Core\Database\Database;
+use Drupal\Core\Extension\ModuleUninstallValidatorException;
+use Drupal\Core\Site\Settings;
+use Drupal\menu_title_length\MenuTitleLengthConstant;
+
+/**
+ * Implements hook_install().
+ */
+function menu_title_length_install() {
+  // Get length of settings.
+  $length = Settings::get('menu_title_length');
+  if (empty($length)) {
+    $length = MenuTitleLengthConstant::MENU_TITLE_LENGTH;
+  }
+
+  // Change node title length.
+  $schema = Database::getConnection()->schema();
+  $schema->changeField('menu_link_content_data', 'title', 'title', [
+    'length' => $length,
+    'not null' => TRUE,
+    'type' => 'varchar',
+  ]);
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function menu_title_length_uninstall() {
+  $length_function = 'char_length';
+  switch (Database::getConnection()->databaseType()) {
+    case 'sqlite':
+      $length_function = 'length';
+      break;
+
+    case 'sqlsrv':
+      $length_function = 'len';
+      break;
+
+    case 'pgsql':
+      $length_function = 'length';
+      break;
+  }
+
+  /** @var \Drupal\Core\Database\Query\Select $query */
+  $query = Database::getConnection()->select('menu_link_content_data', 'ml');
+  $query->addField('ml', 'title');
+  $query->where("$length_function(title) > 255");
+  $menu_title_count = $query->countQuery()
+    ->execute()
+    ->fetchField();
+
+  if ($menu_title_count > 0) {
+    throw new ModuleUninstallValidatorException('Menu exist with long titles. Module cannot be uninstalled.');
+  }
+
+  // Change node title length.
+  $schema = Database::getConnection()->schema();
+  $schema->changeField('menu_link_content_data', 'title', 'title', [
+    'length' => 255,
+    'not null' => TRUE,
+    'type' => 'varchar',
+  ]);
+}

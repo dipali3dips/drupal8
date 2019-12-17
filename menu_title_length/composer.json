@@ -1,0 +1,5 @@
+{
+  "name": "drupal/menu_title_length",
+  "type": "drupal-module",
+  "description": "Change the maximum length of menu title."
+}
