@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains add_siteapi_key.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function add_siteapi_key_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the add_siteapi_key module.
+    case 'help.page.add_siteapi_key':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Add new field called site api key to site configurtaion form') . '</p>';
+      return $output;
+
+    default:
+  }
+}
