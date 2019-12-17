@@ -1,0 +1,5 @@
+name: 'Add Site API Key to Site Configuration'
+type: module
+description: 'Add new field called site api key to site configurtaion form'
+core: 8.x
+package: 'Custom'

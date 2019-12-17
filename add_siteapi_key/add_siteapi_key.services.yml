@@ -1,0 +1,6 @@
+services:
+  add_siteapi_key.route_subscriber:
+    class: \Drupal\add_siteapi_key\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }
+      

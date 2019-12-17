@@ -1,0 +1,12 @@
+add_siteapi_key.content:
+  path: '/page_json/{added_site_api_key}/{node}'
+  defaults:
+    _controller: '\Drupal\add_siteapi_key\Controller\AddSiteApiKeyController::content'
+  options:
+      parameters:
+        added_site_api_key:
+          type: String
+        node:
+          type: entity:node
+  requirements:
+    _permission: 'access content'
