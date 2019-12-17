@@ -1,0 +1,14 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the add_siteapi_key module.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function add_siteapi_key_uninstall() {
+  // Remove set Site API Key configuration
+  \Drupal::configFactory()->getEditable('system.site')->clear('siteapikey')->save();
+}
